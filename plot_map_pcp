@@ -1,0 +1,50 @@
+# A very simple sample code that adds "total_precipitation" to the example "plot map" code
+# Author: Gretchen Mullendore, Spring 2020
+
+import cdstoolbox as ct
+
+layout = {
+    'output_align': 'bottom'
+}
+
+variables = {
+    'Near-Surface Air Temperature': '2m_temperature',
+    'Eastward Near-Surface Wind': '10m_u_component_of_wind',
+    'Westward Near-Surface Wind': '10m_v_component_of_wind',
+    'Sea Level Pressure': 'mean_sea_level_pressure',
+    'Sea Surface Temperature': 'sea_surface_temperature',
+    'Total Precipitation':'total_precipitation'
+}
+
+
+@ct.application(title='Plot Map', layout=layout)
+@ct.input.dropdown('variable', label='Variable', values=variables.keys())
+@ct.output.figure()
+def plot_map(variable):
+    """
+    Application main steps:
+
+    - set the application layout with output at the bottom
+    - select a variable name from a list in the dropdown menu
+    - retrieve the selected variable
+    - compose a title
+    - show the result on a map using the chosen title
+
+    """
+
+    data = ct.catalogue.retrieve(
+        'reanalysis-era5-single-levels',
+        {
+            'variable': variables[variable],
+            'product_type': 'reanalysis',
+            'year': '2019',
+            'month': '08',
+            'day': '15',
+            'time': '12:00',
+        }
+    )
+
+    title = '{}'.format(' '.join([text.capitalize() for text in variable.split('_')]))
+    fig = ct.cdsplot.geomap(data, title=title, extent=[110, 150, -30, -20])
+
+    return fig
