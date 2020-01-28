@@ -1,3 +1,13 @@
+"""
+This code is a modification of the regional plotting code, but modified to plot
+snowfall, snow depth, and total precipitation for a selected year/month combination.
+This code was also modified to have custom maxima for each variable. These maxima
+are set up in the "maxs" dictionary, and the maximum value is retrieved through
+indexing the dictionary using the variable name. For example, to grab the maximum
+value of snow depth, use "maxs['Snow Depth'].
+
+"""
+
 import cdstoolbox as ct
 
 layout = {
@@ -38,7 +48,8 @@ months = {
     '12': '12',
 }
 
-# maxs is a dictionary that houses the maxima for each variable. The variable names from the 'variables' dictionary are used as keys to access each max value in this dictionary.
+# maxs is a dictionary that houses the maxima for each variable. The variable names from the 'variables' 
+# dictionary are used as keys to access each max value in this dictionary.
 maxs = {
     'Snowfall': 100,
     'Snow Depth': 1,
