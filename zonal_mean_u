@@ -11,7 +11,7 @@ layout = {
 
 @ct.application(title='Calculate zonal mean zonal wind', layout=layout)
 @ct.output.figure()
-#@ct.output.dataarray()
+@ct.output.dataarray()
 def mzone():
     """
     Application main steps:
@@ -41,13 +41,10 @@ def mzone():
     
     lonmean = ct.cube.average(data, dim='lon')
     
-    ## "return" line below is for output.dataarray
-    ## use "ncdump -h <filename>" to see dim/var info
-    #return lonmean
-    
     figa = ct.cdsplot.pcolormesh(
         lonmean, cmap='coolwarm', x='lat', y='plev',
         title='Zonal Mean Wind (Jan 2018)'
     )
  
-    return figa  
+    return figa, lonmean
+    #use ncdump -h to query downloaded file header
