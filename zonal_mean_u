@@ -1,0 +1,53 @@
+"""
+This program will plot zonal mean zonal wind
+Unsolved problems: flip y-axis, convert y-axis units to hPa
+"""
+
+import cdstoolbox as ct
+
+layout = {
+    'output_align': 'bottom'
+}
+
+@ct.application(title='Calculate zonal mean zonal wind', layout=layout)
+@ct.output.figure()
+#@ct.output.dataarray()
+def mzone():
+    """
+    Application main steps:
+
+    - retrieve monthly-averaged 3D zonal wind
+    - compute its zonal mean (e.g. average over all longitudes)
+    - plot the global zonal wind latitude versus pressure
+  
+    """
+    data = ct.catalogue.retrieve(
+        'reanalysis-era5-pressure-levels-monthly-means',
+        {
+            'product_type': 'monthly_averaged_reanalysis',
+            'pressure_level': [
+                '50', '100', '200',
+                '300', '400', '500',
+                '600', '700', '800',
+                '850', '900', '950',
+                '1000',
+            ],
+            'year': '2018',
+            'month': '01',
+            'time': '00:00',
+            'variable': 'u_component_of_wind',
+        }
+    )
+    
+    lonmean = ct.cube.average(data, dim='lon')
+    
+    ## "return" line below is for output.dataarray
+    ## use "ncdump -h <filename>" to see dim/var info
+    #return lonmean
+    
+    figa = ct.cdsplot.pcolormesh(
+        lonmean, cmap='coolwarm', x='lat', y='plev',
+        title='Zonal Mean Wind (Jan 2018)'
+    )
+ 
+    return figa  
