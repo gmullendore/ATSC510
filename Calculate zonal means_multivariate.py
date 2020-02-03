@@ -1,10 +1,15 @@
 import cdstoolbox as ct
 """
-This program is a modification of "Calculate zonal means". It has been modified to generate monthly zonal means from of one of five variables for the time period between 2017 and 2019. 
+This program is a modification of "Calculate zonal means". It has been modified to generate monthly zonal means 
+from of one of five variables for the time period between 2017 and 2019. 
 
-Two dropdown menus are generated: the first, "Month", lets the user select which month to generate a zonal mean for. NOTE: the Yearly option is a "Hail Mary" attempt at making a total climatology. Under the months dictionary, the "Yearly" option contains all the months, with the hope that the time averaging code below would work. However, initial testing has not worked out as well as planned, so it doesn't work right now.
+Two dropdown menus are generated: the first, "Month", lets the user select which month to generate a zonal mean 
+for. NOTE: the Yearly option is a "Hail Mary" attempt at making a total climatology. Under the months dictionary, 
+the "Yearly" option contains all the months, with the hope that the time averaging code below would work. However, 
+initial testing has not worked out as well as planned, so it doesn't work right now.
 
-The second dropdown menu, "Variable", lets the user select which variable to find the zonal mean of. The options are Temperature, Zonal Wind, Meridional Wind, Vertical Velocity, and Vorticity.
+The second dropdown menu, "Variable", lets the user select which variable to find the zonal mean of. The options 
+are Temperature, Zonal Wind, Meridional Wind, Vertical Velocity, and Vorticity.
 
 At the end, a netCDF file containing the data in the figure is made available to download and work with independently.
 
