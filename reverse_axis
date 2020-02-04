@@ -1,0 +1,56 @@
+#this script shows an example of plotting a reversed axis
+# from Kevin Marsh at Copernicus User Support Service at ECMWF
+
+import cdstoolbox as ct
+
+layout = { 'output_align': 'bottom' }
+
+@ct.application(title='Calculate zonal mean zonal wind', layout=layout)
+@ct.output.livefigure()
+def mzone():
+    """
+    Application main steps:
+
+        retrieve monthly-averaged 3D zonal wind
+        compute its zonal mean (e.g. average over all longitudes)
+        plot the global zonal wind latitude versus pressure
+
+    """
+    data = ct.catalogue.retrieve(
+        'reanalysis-era5-pressure-levels-monthly-means',
+        {
+            'product_type': 'monthly_averaged_reanalysis',
+            'pressure_level': [
+                '50', '100', '200', '300', '400', '500', '600',
+                '700', '800', '850', '900', '950', '1000',
+            ],
+            'year': '2018',
+            'month': '01',
+            'time': '00:00',
+            'variable': 'u_component_of_wind', }
+
+    )
+
+    lonmean = ct.cube.average(data, dim='lon')
+
+    layout_kwargs = {
+        'yaxis': {
+          'autorange': 'reversed',
+            'tickmode': 'linear',
+            'tick0': 0,
+            'dtick': 20000,
+            'title': 'pressure (Pa)',
+        },
+        'xaxis': {
+            'tickmode': 'linear',
+            'tick0': -75,
+            'dtick': 25,
+            'title': 'latitude (degrees)',
+        },
+    }
+    fig = ct.chart.heatmap(
+        lonmean, layout_kwargs=layout_kwargs, xdim='lat', zmin=-40, zmax=40,
+        colorbar={'title': {'text': 'eastward wind (ms⁻¹)', 'side': 'right'}},
+    )
+
+    return fig
