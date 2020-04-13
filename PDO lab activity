@@ -1,0 +1,85 @@
+import cdstoolbox as ct
+
+#Pick two new variables from sinle level monthly mean dataset
+variables = {
+    'Near-Surface Air Temperature': '2m_temperature',
+    'Sea Level Pressure': 'mean_sea_level_pressure',
+    'Sea Surface Temperature': 'sea_surface_temperature',
+    'Total Precipitation': 'total_precipitation'
+}
+
+#initializes plots and drop down menu
+@ct.application(title='Plot Map')
+@ct.input.dropdown('variable', label='Variable', values=variables.keys())
+@ct.output.figure()
+@ct.output.figure()
+def plot_map(variable):
+
+    
+#PDO neutral data collection
+    base_state = ct.catalogue.retrieve(
+        'reanalysis-era5-single-levels-monthly-means',
+        {
+            'variable': variables[variable],
+            'year': [
+                '2017', '2007','1994', '1993', '1980','1988','1995'
+            ],
+            'product_type': 'monthly_averaged_reanalysis',
+            'month': [
+                '01', '02', '03'
+            ],
+            'time': '00:00',
+        }
+    )
+
+# PDO postive data collection    
+    Pos_PDO = ct.catalogue.retrieve(
+         'reanalysis-era5-single-levels-monthly-means',
+        {
+            'variable': variables[variable],
+            'year': [
+                '2015','1984','2003','1981'
+            ],
+            'product_type': 'monthly_averaged_reanalysis',
+            'month': [
+                '01', '02', '03'
+            ],
+            'time': '00:00',
+        }
+  
+    )
+
+#PDO negative data collection
+    Neg_PDO = ct.catalogue.retrieve(
+         'reanalysis-era5-single-levels-monthly-means',
+        {
+            'variable': variables[variable],
+            'year': [
+                '1991','2002', '2012','2013'
+            ],
+            'product_type': 'monthly_averaged_reanalysis',
+            'month': [
+                '01', '02', '03'
+            ],
+            'time': '00:00',
+        }
+  
+    )
+
+
+    
+    #Average data over time
+    Avg_month_Nutr_PDO = ct.cube.average(base_state, dim='time')
+    Avg_month_Pos_PDO = ct.cube.average(Pos_PDO, dim='time')
+    Avg_month_Neg_PDO = ct.cube.average(Neg_PDO, dim='time')
+    
+    #compute climate anomalies
+    Avg_Pos =  Avg_month_Pos_PDO - Avg_month_Nutr_PDO
+    Avg_Neg = Avg_month_Neg_PDO - Avg_month_Nutr_PDO
+               
+    #create plots
+    fig1 = ct.cdsplot.geomap(Avg_Pos,extent=[-165,-50,10,70], title= 'Postive PDO anomaly')
+    fig2 = ct.cdsplot.geomap(Avg_Neg,extent=[-165,-50,10,70], title= 'Negative PDO anomaly')
+    
+    return fig1, fig2
+  
