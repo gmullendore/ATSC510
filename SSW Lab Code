@@ -1,0 +1,84 @@
+import cdstoolbox as ct
+
+layout = { 'output_align': 'bottom' }
+
+@ct.application(title='10 hPa Analysis', layout=layout)
+
+@ct.output.figure()
+
+def temp():
+    data = ct.catalogue.retrieve(
+        'reanalysis-era5-pressure-levels',
+        {
+            'product_type': 'reanalysis',
+            'variable': [
+              
+               ## UNCOMMENT A VARIABLE BELOW, OR ADD YOUR OWN 
+                
+               # 'u_component_of_wind', 
+               # 'temperature',
+               # 'potential_vorticity'
+            ],
+            'pressure_level': [
+               
+               ## UNCOMMENT A PRESSURE LEVEL BELOW, OR ADD YOUR OWN
+                
+               # '10'
+            ],
+            'year': [
+               
+               ## UNCOMMENT A YEAR BELOW, OR ADD YOUR OWN
+               
+               # '2014'
+               # '2015',
+               # '2016', 
+               # '2017', 
+               # '2018',
+               # '2019',
+            ],
+            'month': [
+               
+               ## UNCOMMENT A MONTH BELOW, OR ADD YOUR OWN
+                
+               # '01',
+               # '02',
+               # '03',
+               # '10',
+               # '11',
+               # '12',
+            ],
+            'day': [
+               
+               ## UNCOMMENT A DAY BELOW, OR ADD YOUR OWN
+                
+               # '01', 
+               # '05',
+               # '10',
+               # '15',
+               # '20',
+               # '25',
+               # '30',
+            ],
+            'time': '00:00',
+        }
+    )
+    
+    #### THE FOLLOWING ARE CODE PRE-MADE FOR THE VARIABLES ABOVE.
+    #### UNCOMMENT THE CODE YOU WISH TO USE, OR ADD YOUR OWN
+    
+    ##Figure for u-comp winds
+    #fig = ct.cdsplot.geomap(data, 
+    #                        title = '10 hPa Zonal Winds', 
+    #                        pcolormesh_kwargs = {'vmin': -60, 'vmax': 60, 'cmap':'bwr'})
+    
+    ##Figure for temperatures
+    #fig = ct.cdsplot.geomap(data, 
+    #                        title = '10 hPa Temperatures', 
+    #                        pcolormesh_kwargs = {'vmin': -80, 'vmax': -20, 'cmap':'jet'})
+
+    ##Figure for PV
+    #fig = ct.cdsplot.geomap(data, 
+    #                        title = '10 hPa Potential Vorticity', 
+    #                        pcolormesh_kwargs = {'vmin': -5*10**-4, 'vmax': 5*10**-4, 'cmap':'plasma'})
+    
+    return fig
